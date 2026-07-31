@@ -38,7 +38,7 @@ A lightweight command-line tool written in Python that identifies possible hash 
 Clone the repository:
 
 ```bash
-git clone https://github.com/<your-username>/hash-identifier.git
+git clone https://github.com/chandramouli-123/hash-identifier.git
 cd hash-identifier
 ```
 
