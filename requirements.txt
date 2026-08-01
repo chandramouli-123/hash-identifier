@@ -1,1 +1,1 @@
-# No external dependencies required.
+rich>=14.1.0

@@ -10,6 +10,13 @@ using prefix detection and hexadecimal length heuristics.
 
 import argparse
 from dataclasses import dataclass
+from time import sleep
+# pyrefly: ignore [missing-import]
+from rich.console import Console
+from rich.table import Table 
+from rich.progress import track
+
+
 
 @dataclass
 class HashCandidate:
@@ -40,9 +47,9 @@ HEX_LENGTH_RULES = {
         ("RIPEMD-160","160-bit cryptographic hash designed as an alternative to SHA-1.")
     ],
     64  : [
-        ("SHA-256","256-bit member of the SHA-2 family, widely used and currently considered secure.")
-        ("SHA3-256", "256-bit member of the SHA-3 family, based on the Keccak sponge construction.")
-        ("BLACKE2s-256", "Fast 256-bit hash optimized for software and smaller systems.")
+        ("SHA-256","256-bit member of the SHA-2 family, widely used and currently considered secure."),
+        ("SHA3-256", "256-bit member of the SHA-3 family, based on the Keccak sponge construction."),
+        ("BLACKE2s-256", "Fast 256-bit hash optimized for software and smaller systems."),
         ("SM3","256-bit Chinese national cryptographic hash standard.")
     ],
     96  : [
@@ -79,24 +86,45 @@ def identify(text):
     if _is_hex(text):
         if hash_len in HEX_LENGTH_RULES:
             for algo,detail in HEX_LENGTH_RULES[hash_len]:
-                result.append(HashCandidate(algo,detail,"Possibility: Medium","Length Matches and contains only hexadecimal values")) 
+                result.append(HashCandidate(algo,detail,"Medium","Length Matches and contains only hexadecimal values")) 
     return result
 
+def process_data():
+        sleep(0.02)
 
 def main():
-# get input -> parse it -> call identify ->print result
+    # get input -> parse it -> call identify ->print result
+    console = Console()
+
     parser = argparse.ArgumentParser()
     parser.add_argument("hashval")
     args = parser.parse_args()
-    print("The entered hash is "+ args.hashval)
+    console.print("The entered hash is " + f"[yellow]{args.hashval}[/yellow]")
+
+    for _ in track(range(100), description='[green] Waking the Engine Up'):
+        process_data()
 
     candidate = identify(args.hashval.strip())
-    if len(candidate)!=0:
+
+    table = Table(title="Hash Results")
+    table.add_column("Algorithm", style="cyan", no_wrap=True)
+    table.add_column("Details", style="green", justify="left")
+    table.add_column("Confidence", style="yellow", justify="left")
+    table.add_column("Reason", style="green", justify="left")
+
+    if len(candidate) != 0:
+        colors = {"High": "green", "Medium": "yellow", "Low": "red"}
         for i in candidate:
-            print(i)
+            color = colors.get(i.confidence, "white")
+            table.add_row(
+                f"[{color}]{i.algorithm}[/{color}]",
+                i.detail,
+                f"[{color}]{i.confidence}[/{color}]",
+                i.reason
+            )
     else:
-        print("No matching algorithms found")
+        console.print("[yellow]No matching algorithms found[/yellow]")
 
-
+    console.print(table)
 if __name__ == "__main__":
     main()
