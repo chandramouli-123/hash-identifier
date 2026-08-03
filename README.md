@@ -73,14 +73,16 @@ pip install -r requirements.txt
 Prefix example:
 
 ```bash
-python hash_identifier.py '$2b$abcdefghijklmnopqrstuv'
+python cli.py '$2b$abcdefghijklmnopqrstuv'
 ```
 
 Hexadecimal example:
 
 ```bash
-python hash_identifier.py 5f4dcc3b5aa765d61d8327deb882cf99
+python cli.py 5f4dcc3b5aa765d61d8327deb882cf99
 ```
+
+If you install the project, the console script entry point is `hash-identifier`.
 ## Documentation
 
 - 📖 [Architecture](docs/architecture.md)

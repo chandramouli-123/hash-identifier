@@ -8,7 +8,7 @@ This page is about *how the code is shaped*. Not what each line does — that's 
 
 ## 1. The big picture
 
-The whole tool is one Python file: `hash_identifier.py`. Everything that runs lives in that file. There are three layers inside it:
+The tool is split across the `src/hash_identifier` package. The CLI, detector, rules, models, and validators now live in separate modules, but the same three layers still exist:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -247,7 +247,7 @@ The brain is one big function (`identify`), but two small helpers live next to i
 └──────────────────────────────────────────────────────────┘
 ```
 
-The leading underscore (`_is_hex`, not `is_hex`) is a Python convention meaning **"this is module-private."** It says to other developers: "this is an implementation detail of `hash_identifier.py`; don't import it from somewhere else." Python doesn't *enforce* this — you can still import private names — but every linter and every reviewer will flag you if you do.
+The leading underscore (`_is_hex`, not `is_hex`) is a Python convention meaning **"this is module-private."** It says to other developers: "this is an implementation detail of the validator module; don't import it from somewhere else." Python doesn't *enforce* this — you can still import private names — but every linter and every reviewer will flag you if you do.
 
 The helpers are tiny on purpose. Each one is a single boolean question. We pull them out of `identify()` not because they're complicated but because giving them a name makes `identify()` read like English: "if `_is_hex(text)`, do hex-length matching." If we inlined the test, the eye would have to parse it.
 
@@ -293,7 +293,7 @@ The crucial design choice in the CLI layer is **dependency injection**. `_render
 
 ## 8. The test file mirrors the brain
 
-`test_hash_identifier.py` is structured to mirror `hash_identifier.py`. It tests every behavior the tool claims to have:
+`tests/test_detector.py` is structured to exercise `identify()` directly. It tests the core behavior the tool claims to have:
 
 ```
 test_bcrypt_prefix_is_recognized            ── covers PREFIX_RULES row $2b$

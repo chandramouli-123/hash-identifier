@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hash-identifier"
+version = "0.1.0"
+description = "Lightweight CLI tool for identifying possible hash algorithms."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = ["rich>=14.1.0"]
+
+[project.scripts]
+hash-identifier = "hash_identifier.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
