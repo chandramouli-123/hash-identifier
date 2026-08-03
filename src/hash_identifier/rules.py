@@ -1,9 +1,45 @@
+from .models import Rule
+
 PREFIX_RULES = [
-    ("$2b$", "bcrypt", "Current bcrypt variant"),
-    ("$2y$", "bcrypt", "Legacy bcrypt variant"),
-    ("$argon2d$", "Argon", "Argon - GPU resistant variant"),
-    ("$argon2i$", "Argon", "Argon - Side Channel Resistant variant"),
-    ("$argon2id$", "Argon", "Argon Hybrid variant"),
+    Rule(
+        algorithm="bcrypt",
+        detail="Current bcrypt variant",
+        confidence=100,
+        reason="Matches Prefix",
+        regex=r"\$2b\$[0-9]{2}\$[A-Za-z0-9./]{53}",
+        prefix="$2b$",
+        length=60,
+    ),
+    Rule(
+        algorithm="bcrypt",
+        detail="Legacy bcrypt variant",
+        confidence=100,
+        reason="Matches Prefix",
+        regex=r"\$2y\$[0-9]{2}\$[A-Za-z0-9./]{53}",
+        prefix="$2y$",
+        length=60,
+    ),
+    Rule(
+        algorithm="Argon",
+        detail="Argon - GPU resistant variant",
+        confidence=100,
+        reason="Matches Prefix",
+        prefix="$argon2d$",
+    ),
+    Rule(
+        algorithm="Argon",
+        detail="Argon - Side Channel Resistant variant",
+        confidence=100,
+        reason="Matches Prefix",
+        prefix="$argon2i$",
+    ),
+    Rule(
+        algorithm="Argon",
+        detail="Argon Hybrid variant",
+        confidence=100,
+        reason="Matches Prefix",
+        prefix="$argon2id$",
+    ),
 ]
 
 HEX_LENGTH_RULES = {

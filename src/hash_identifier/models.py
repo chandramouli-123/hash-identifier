@@ -1,3 +1,4 @@
+from typing import Optional
 from dataclasses import dataclass
 
 
@@ -5,5 +6,17 @@ from dataclasses import dataclass
 class HashCandidate:
     algorithm: str
     detail: str
-    confidence: str
+    confidence: int
     reason: str
+
+
+@dataclass(frozen=True,slots=True)
+class Rule:
+    algorithm : str
+    detail : str
+    confidence : int
+    reason : str
+    regex : Optional[str] = None
+    prefix : Optional[str] = None
+    suffix : Optional[str] = None    
+    length : Optional[int]=None

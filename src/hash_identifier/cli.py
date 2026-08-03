@@ -8,8 +8,7 @@ from rich.table import Table
 from .detector import identify
 
 
-def process_data() -> None:
-    sleep(0.02)
+
 
 
 def _build_parser() -> argparse.ArgumentParser:
@@ -24,8 +23,9 @@ def _render_table(candidate):
     table.add_column("Details", style="green", justify="left")
     table.add_column("Confidence", style="yellow", justify="left")
     table.add_column("Reason", style="green", justify="left")
+    
 
-    colors = {"High": "green", "Medium": "yellow", "Low": "red"}
+    colors = {100: "green", 50: "yellow", 0: "red"}
     for item in candidate:
         color = colors.get(item.confidence, "white")
         table.add_row(
@@ -43,8 +43,6 @@ def main(argv=None) -> int:
     args = _build_parser().parse_args(argv)
     console.print(f"The entered hash is [yellow]{args.hashval}[/yellow]")
 
-    for _ in track(range(100), description="[green]Waking the Engine Up"):
-        process_data()
 
     candidate = identify(args.hashval.strip())
 

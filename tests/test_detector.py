@@ -12,8 +12,8 @@ from hash_identifier.models import HashCandidate
 class DetectorTests(unittest.TestCase):
     def test_prefix_match_returns_high_confidence_candidate(self):
         self.assertEqual(
-            identify("$2b$abcdefghijklmnopqrstuv"),
-            [HashCandidate("bcrypt", "Current bcrypt variant", "High", "Matches Prefix")],
+            identify("$2b$12$" + "a" * 53),
+            [HashCandidate("bcrypt", "Current bcrypt variant", 100, "Matches Prefix")],
         )
 
     def test_hex_length_match_returns_all_candidates_for_length(self):
@@ -21,7 +21,7 @@ class DetectorTests(unittest.TestCase):
 
         self.assertEqual(len(candidates), 4)
         self.assertEqual(candidates[0].algorithm, "MD5")
-        self.assertEqual(candidates[0].confidence, "Medium")
+        self.assertEqual(candidates[0].confidence, 50)
 
 
 if __name__ == "__main__":
