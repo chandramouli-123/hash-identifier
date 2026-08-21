@@ -25,6 +25,7 @@ PREFIX_RULES = [
         confidence=100,
         reason="Matches Prefix",
         prefix="$argon2d$",
+        length=96
     ),
     Rule(
         algorithm="Argon",
@@ -32,6 +33,7 @@ PREFIX_RULES = [
         confidence=100,
         reason="Matches Prefix",
         prefix="$argon2i$",
+        length=96
     ),
     Rule(
         algorithm="Argon",
@@ -39,6 +41,7 @@ PREFIX_RULES = [
         confidence=100,
         reason="Matches Prefix",
         prefix="$argon2id$",
+        length=96
     ),
 ]
 
