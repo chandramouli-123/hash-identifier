@@ -8,4 +8,10 @@
 - refactoring the entire codebase into different modules from single file called hash-identifier
 - Moved confidence into Rule so the detector doesn't hardcode it.
 
+## Day 3
+- More Hash alogorithms were added
+- Tests were written to automate testing process. But need more robust test cases.
+
+## Day 4
+- Added --json flag for json output
 

@@ -1,6 +1,9 @@
 import argparse
 from time import sleep
 
+import json
+from dataclasses import asdict
+
 from rich.console import Console
 from rich.progress import track
 from rich.table import Table
@@ -11,8 +14,10 @@ from .detector import identify
 
 
 
+
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Identify possible hash algorithms.")
+    parser.add_argument("-j","--json",action="store_true",default=False,help="Ouptut results as json")
     parser.add_argument("hashval", help="Hash string to inspect")
     return parser
 
@@ -41,17 +46,20 @@ def _render_table(candidate):
 def main(argv=None) -> int:
     console = Console()
     args = _build_parser().parse_args(argv)
-    console.print(f"The entered hash is [yellow]{args.hashval}[/yellow]")
-
-
     candidate = identify(args.hashval.strip())
-
-    if candidate:
-        console.print(_render_table(candidate))
+    if(not args.json):
+        console.print(f"The entered hash is [yellow]{args.hashval}[/yellow]")        
+        if candidate:
+            console.print(_render_table(candidate))
+        else:
+            console.print("[yellow]No matching algorithms found[/yellow]")
+            console.print(_render_table([]))
     else:
-        console.print("[yellow]No matching algorithms found[/yellow]")
-        console.print(_render_table([]))
-
+        ouput_data = {
+            "input" : args.hashval.strip(),
+            "candidates" : [asdict(c) for c in candidate]
+        }
+        print(json.dumps(ouput_data,indent = 4))
     return 0
 
 
