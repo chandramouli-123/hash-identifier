@@ -11,6 +11,13 @@ from rich.table import Table
 from .detector import identify
 
 
+def _positive_int(value):
+    number = int(value)
+    if number < 1:
+        raise argparse.ArgumentTypeError("must be a positive integer")
+    return number
+
+
 
 
 
@@ -19,6 +26,7 @@ def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Identify possible hash algorithms.")
     parser.add_argument("-j","--json",action="store_true",default=False,help="Ouptut results as json")
     parser.add_argument("-v","--verbose",action="store_true",default=False,help="Verbose output for detailed information")
+    parser.add_argument("--top", type=_positive_int, help="Return the top N matches")
     parser.add_argument("hashval", help="Hash string to inspect")
     return parser
 
@@ -67,6 +75,8 @@ def main(argv=None) -> int:
     console = Console()
     args = _build_parser().parse_args(argv)
     candidate = identify(args.hashval.strip())
+    if args.top is not None:
+        candidate = candidate[:args.top]
     if(not args.json and not args.verbose):
         console.print(f"The entered hash is [yellow]{args.hashval}[/yellow]")        
         if candidate:

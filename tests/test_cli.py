@@ -60,3 +60,37 @@ def test_cli_verbose_output(capsys):
     assert "Confidence" in captured.out
     assert "100" in captured.out
     assert captured.err == ""
+
+def test_top_flag(capsys):
+    hash_value = "a" * 32
+    main(["--top", "2", hash_value])
+
+    captured = capsys.readouterr()
+    assert "MD5" in captured.out
+    assert "NTLM" in captured.out
+    assert captured.err == ""
+
+
+def test_top_flag_with_json(capsys):
+    main(["--json", "--top", "2", "a" * 32])
+
+    output = json.loads(capsys.readouterr().out)
+    assert len(output["candidates"]) == 2
+    assert [item["algorithm"] for item in output["candidates"]] == ["MD5", "NTLM"]
+
+
+def test_top_flag_with_verbose(capsys):
+    main(["--verbose", "--top", "2", "a" * 32])
+
+    captured = capsys.readouterr()
+    assert "MD5" in captured.out
+    assert "NTLM" in captured.out
+    assert "MD4" not in captured.out
+
+
+def test_top_flag_requires_positive_integer(capsys):
+    with pytest.raises(SystemExit) as error:
+        main(["--top", "0", "a" * 32])
+
+    assert error.value.code == 2
+    assert "must be a positive integer" in capsys.readouterr().err
