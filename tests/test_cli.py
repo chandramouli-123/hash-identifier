@@ -45,3 +45,18 @@ def test_cli_output_no_json_no_match_no_newline(capsys):
     assert "The entered hash is " in captured.out
     assert "No matching algorithms found" in captured.out
     assert captured.err == ""
+
+
+def test_cli_verbose_output(capsys):
+    hash_value = "$2b$12$" + "a" * 53
+
+    main(["--verbose", hash_value])
+
+    captured = capsys.readouterr()
+    assert "bcrypt" in captured.out
+    assert "Verbose Evidence" in captured.out
+    assert "Input length: 60" in captured.out
+    assert "Matches Prefix" in captured.out
+    assert "Confidence" in captured.out
+    assert "100" in captured.out
+    assert captured.err == ""
